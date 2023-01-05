@@ -44,3 +44,18 @@ func (s *UCISuite) TestUCIDepth19(c *C) {
 	// c.Assert(res.BestMove, Equals, "b5c6")
 	c.Assert(len(res.Results), Equals, 19)
 }
+
+func (s *UCISuite) TestCritterUCIDepth10(c *C) {
+	var err error
+	eng, err := NewEngine("./critter-16a")
+	c.Assert(err, IsNil)
+	eng.UCI()
+	eng.SetOptions(Options{Threads: 2})
+	eng.SetFEN("r1b1k1nr/ppq2pbp/2n1p1p1/1B2pN2/5P2/2N1B3/PPP3PP/R2QK2R w KQkq - 2 11")
+	resultOpts := IncludeUpperbounds | IncludeLowerbounds
+	res, err := eng.GoDepth(10, resultOpts)
+	c.Assert(err, IsNil)
+	c.Assert(res.BestMove, Equals, "f5g7")
+	lastPly := res.Results[len(res.Results)-1]
+	c.Assert(lastPly.Depth, Equals, 10)
+}
