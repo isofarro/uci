@@ -286,7 +286,12 @@ func (res *Results) addLineToResults(line string) error {
 			}
 		case "time":
 			s.Scan()
-			r.Time, err = strconv.Atoi(s.TokenText())
+			token := s.TokenText()
+			if token == "-" {
+				s.Scan()
+				token = token + s.TokenText()
+			}
+			r.Time, err = strconv.Atoi(token)
 			if err != nil {
 				return err
 			}
